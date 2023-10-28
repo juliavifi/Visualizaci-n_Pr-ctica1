@@ -27,11 +27,11 @@ d3.json("parados_edad_com_t.json").then(function (datosCompletos) {
   console.log(datos_tot);
 
   // Configuración del gráfico
-  const width = 800;
+  const width = 1000;
   const height = 700;
   const margin = {
     left: 90,
-    right: 200,
+    right: 150,
     top: 20,
     bottom: 100,
   };
@@ -82,7 +82,7 @@ d3.json("parados_edad_com_t.json").then(function (datosCompletos) {
 //    "#9edae5",
 //  ]);
     
-var colorScale = d3.scaleLinear()
+  var colorScale = d3.scaleLinear()
     .range(["purple", "red", "orange", "green", "blue"])
     .domain([0,4,9,14,19]);
 
@@ -131,7 +131,7 @@ svg
    .attr("x", width / 2)
    .attr("y", height- margin.bottom/4) // Ajusta la posición vertical según tus necesidades
    .attr("text-anchor", "middle")
-   .text("Título del Eje X");
+   .text("Fecha");
     
     
 
@@ -149,12 +149,11 @@ svg
    .attr("x", 0 - height / 2)
    .attr("y", margin.left *0.5 ) // Ajusta la posición vertical según tus necesidades
    .attr("text-anchor", "middle")
-   .text("Título del Eje Y");
+   .text("Tasa de paro  (%)");
  
     
 ///////////////////////////////////////
-
-  function dibujarCheckbox(datos, posicion) {
+function dibujarCheckbox(datos, posicion) {
     const color = colorScale(posicion); // Obtén un color único para este checkbox
 
     // Crea un checkbox
@@ -236,6 +235,7 @@ function mostrarLineas(datos, escalaX, escalaY, color, posicion) {
     
   lineasGroup
     .append("text")
+    .attr("class", `texto-${posicion}`)
     .attr("x", escalaX(new Date(datos.Data[0].Fecha)))
     .attr("y", escalaY(datos.Data[0].Valor)) // Ajusta la posición vertical del texto
     .attr("dx", 10)
@@ -277,13 +277,14 @@ function mostrarLineas(datos, escalaX, escalaY, color, posicion) {
 
     
     /* Funciones para gestionar los Tooltips */
-    function borrarTooltip(){
+function borrarTooltip(){
          tooltip.style("display", "none");
     };
-    function pintarTooltip(d){
-        tooltip.text("hola")
+    
+function pintarTooltip(d){
+        tooltip.text(formatoFechaEnEspanol(new Date(d.Fecha))+": "+d.Valor+" %")
                .style ("top", d3.event.pageY + "px")
-               .style ("left", d3.event.pageX + "px")
+               .style ("left", d3.event.pageX + 5+ "px")
                // Para que la aparición no se brusca
                //.transition()
                .style("opacity",1)
@@ -295,6 +296,7 @@ function mostrarLineas(datos, escalaX, escalaY, color, posicion) {
   function ocultarLineas(posicion) {
     // Elimina todas las líneas del checkbox específico
     svg.selectAll(`.lineas-${posicion}`).remove();
+    svg.selectAll(`.texto-${posicion}`).remove();
   }
 
   // Itera a través de tus datos y dibuja checkboxes para cada conjunto de datos
