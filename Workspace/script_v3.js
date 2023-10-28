@@ -53,10 +53,10 @@ d3.json("parados_edad_com_t.json").then(function (datosCompletos) {
     .domain([new Date(minDate), new Date(maxDate)]) // Asegúrate de crear objetos Date
     .range([0 + margin.left, width - margin.right]);
 
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, 40])
-    .range([height - margin.bottom, 0 + margin.top]);
+//  const yScale = d3
+//    .scaleLinear()
+//    .domain([0, 40])
+//    .range([height - margin.bottom, 0 + margin.top]);
 
 //  // Define una escala de colores
 //  const colorScale = d3.scaleOrdinal([
@@ -135,12 +135,8 @@ svg
     
     
 
-  var ejeY = d3.axisLeft(yScale).ticks(10);
-
-  svg
-    .append("g")
-    .attr("transform", "translate (" + margin.left + ",0)")
-    .call(ejeY);
+ var gEjeY =  svg.append("g")
+                .attr("transform","translate (" + margin.left + ",0)")
     
 // Agregar título al eje Y
 svg
@@ -153,6 +149,43 @@ svg
  
     
 ///////////////////////////////////////
+function calcularValorMaximo() {
+  let maxValor = 0; // Inicializamos en 0
+
+    datos_tot.forEach((dato, posicion) => {
+        const checkbox = document.querySelector(`.checkbox-${posicion}`);
+        if (checkbox.checked) {
+            // Si el checkbox está marcado, buscar el valor máximo en las líneas correspondientes
+            const maxDato = d3.max(datos_tot[posicion].Data, (d) => d.Valor);
+            if(maxDato>maxValor){//Actualiza el máximo global si es necesario
+                maxValor=maxDato;
+            }
+        }    
+    })
+  return maxValor;
+}
+function actualizarLineas(datos, xScale, yScale, color) {
+    svg.selectAll("line").remove();
+
+    datos.forEach((dato, posicion) => {
+        const checkbox = document.querySelector(`.checkbox-${posicion}`);
+        svg.selectAll(`.texto-${posicion}`).remove();
+        if (checkbox.checked) {
+            mostrarLineas(dato, xScale, yScale, posicion);
+        }
+    });
+        // Vuelve a crear y agregar el eje Y al SVG
+   var ejeY = d3.axisLeft (yScale)
+                .ticks(13);
+     
+        // Eje Y
+        // Pinta sobre la misma g del eje Y
+   gEjeY.transition ()
+             .duration(1000)
+             .ease(d3.easeBounce)
+             .call(ejeY);
+}
+    
 function dibujarCheckbox(datos, posicion) {
     const color = colorScale(posicion); // Obtén un color único para este checkbox
 
@@ -161,16 +194,17 @@ function dibujarCheckbox(datos, posicion) {
     checkbox.type = "checkbox";
     checkbox.className = `checkbox-${posicion}`; // Agrega una clase específica
     checkbox.checked = false; // Por defecto, los checkboxes no están marcados
-
+    
     // Escucha el evento "change" del checkbox
     checkbox.addEventListener("change", () => {
-      if (checkbox.checked) {
-        // Si el checkbox está marcado, muestra las líneas
-        mostrarLineas(datos, xScale, yScale, color, posicion);
-      } else {
-        // Si el checkbox no está marcado, oculta las líneas
-        ocultarLineas(posicion);
-      }
+        const maximo = calcularValorMaximo();
+        const yScale = d3
+            .scaleLinear()
+            .domain([0, maximo])
+            .range([height - margin.bottom, 0 + margin.top]);
+        
+        // Llama a la función para mostrar u ocultar las líneas
+        actualizarLineas(datos_tot, xScale, yScale, color);       
     });
      // Define la posición del botón en función de la posición
     checkbox.style.position = "absolute";
@@ -204,9 +238,10 @@ function dibujarCheckbox(datos, posicion) {
 // Crea un elemento de tooltip
 var tooltip = d3.select("body").append("div").attr("class", "tooltip");
     
-function mostrarLineas(datos, escalaX, escalaY, color, posicion) {
+function mostrarLineas(datos, escalaX, escalaY, posicion) {
+  const color = colorScale(posicion);
   const lineasGroup = svg.append("g"); // Crea un grupo para las líneas
-
+    
   const lineas = lineasGroup
     .selectAll("line")
     .data(datos.Data)
@@ -229,7 +264,8 @@ function mostrarLineas(datos, escalaX, escalaY, color, posicion) {
     })
     .attr("stroke", color)
     .attr("stroke-width", 3)
-    .style("opacity", 0.3);
+    .style("opacity", 0.3)
+    
 
   // Agregar texto solo al último punto de la línea
     
