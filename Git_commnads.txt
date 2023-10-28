@@ -1,0 +1,65 @@
+git clone: Clona un repositorio remoto de GitHub en tu máquina local.
+git clone <URL_del_repositorio>
+
+git init: Inicializa un nuevo repositorio Git en un directorio local.
+git init
+
+git pull: Obtiene las últimas actualizaciones del repositorio remoto y las fusiona con tu rama actual.
+git pull
+
+git push: Sube tus cambios locales al repositorio remoto.
+git push <nombre_remoto> <nombre_rama>
+
+git add: Agrega cambios al área de preparación (staging) para que se incluyan en el próximo commit.
+git add <archivo_o_directorio>
+
+git commit: Crea un nuevo commit con los cambios en el área de preparación.
+git commit -m "Mensaje del commit"
+
+git branch: Muestra una lista de ramas en el repositorio y resalta la rama actual.
+git branch
+
+git checkout: Cambia a una rama específica.
+git checkout <nombre_rama>
+
+git merge: Fusiona una rama con otra.
+git merge <nombre_rama>
+
+git status: Muestra el estado actual de tu directorio de trabajo y de la rama.
+git status
+
+git log: Muestra un registro de commits.
+git log
+
+git remote: Muestra una lista de repositorios remotos configurados.
+git remote -v
+
+git fetch: Obtiene actualizaciones del repositorio remoto sin fusionarlas.
+git fetch
+
+git branch -d: Borra una rama local después de que se hayan fusionado sus cambios.
+git branch -d <nombre_rama>
+
+git branch <>: crear una nueva rama.
+git branch <nombre_rama>
+
+git stash: Guarda temporalmente cambios no comprometidos en una pila de cambios.
+git stash
+
+git tag: Administra etiquetas (tags) para versiones específicas.
+git tag <nombre_tag>
+
+Puedes obtener más información sobre cada comando y sus opciones ejecutando git --help seguido del comando específico para ver su documentación detallada.
+
+ayuda: Las ramas se han divergido y hay que especificar cómo reconciliarlas.
+ayuda: Se puede hacerlo ejecutando uno de los comandos siguiente antes del
+ayuda: próximo pull:
+ayuda: 
+ayuda:   git config pull.rebase false  # fusionar
+ayuda:   git config pull.rebase true   # rebasar
+ayuda:   git config pull.ff only       # solo avance rápido
+ayuda: 
+ayuda: Se puede reemplazar "git config" con "git config --global" para aplicar
+ayuda: la preferencia en todos los repositorios. También se puede pasar
+ayuda: --rebase, --no-rebase o --ff-only en el comando para sobrescribir la
+ayuda: configuración por defecto en cada invocación.
