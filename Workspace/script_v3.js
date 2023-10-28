@@ -22,7 +22,8 @@ function filtrar(VariableNombre, Nombre ,datos){
 console.log(datos_tot);
     
 // Configuración del gráfico
-const width = 1000;
+
+const width = 900;
 const height = 600;
 const margin = { 
     left: 50,
